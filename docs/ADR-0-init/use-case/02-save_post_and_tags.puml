@@ -1,0 +1,34 @@
+@startuml save_post_and_tags
+actor User
+participant "Telegram" as Telegram
+participant "Telegram Bot" as Bot
+participant "Envoy Proxy" as Envoy
+participant "Web Backend" as Backend
+participant "PostgreSQL" as DB
+participant "NATS JetStream" as NATS
+participant "Mini-app Frontend" as Frontend
+
+User -> Telegram : Forwards message to bot
+Telegram -> Bot : Delivers forwarded message
+
+alt User chooses tags inside Telegram
+    Bot -> Envoy : gRPC GetRecentTags(user_id)
+    Envoy -> Backend : gRPC GetRecentTags(user_id)
+    Backend -> DB : SELECT tags FROM recent_tags WHERE user_id = ...
+    DB --> Backend : recent_tags[]
+    Backend --> Envoy : recent_tags[]
+    Envoy --> Bot : recent_tags[]
+
+    Bot -> Telegram : Show recent tags + [Other tags] button
+    User -> Telegram : Selects tag buttons
+    Bot -> NATS : Publish "tags_selected" event (post_id, tag_ids, user_id)
+
+else User clicks "Other tags" → opens Mini-app
+    Telegram -> Frontend : Open mini-app WebView
+    User -> Frontend : Selects tags in UI
+    Frontend -> Backend : POST /posts/:id/tags
+    Backend -> DB : INSERT tag relations, UPDATE recent_tags
+    DB --> Backend : OK
+    Backend --> Frontend : 200 OK
+end
+@enduml

@@ -1,0 +1,46 @@
+@startuml container
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "Telegram User", "User of the Telekeeper bot and mini-app")
+
+System_Boundary(telekeeper, "Telekeeper System") {
+
+    Container(bot, "Telegram Bot", "Python (aiogram)", "Receives and stores forwarded posts")
+
+    Container_Boundary(web, "Web Application") {
+        Container(frontend, "Frontend", "Turbo/Stimulus", "Runs in Telegram WebView and provides UI for managing saved posts")
+        Container(backend, "Backend", "Ruby on Rails", "Processes requests, manages content and business logic")
+    }
+
+    Container_Boundary(infra, "Infrastructure") {
+        ContainerDb(db, "PostgreSQL Database", "PostgreSQL", "Stores saved post text, tags, and lists")
+        Container(envoy, "Envoy Proxy", "Proxy", "Handles gRPC traffic between bot and backend")
+        Container(nats, "NATS JetStream", "Event Broker", "Handles asynchronous communication and event streaming")
+        Container(dlq, "Dead Letter Queue", "NATS Stream", "Stores undelivered or failed events for inspection")
+    }
+}
+
+System_Ext(telegram, "Telegram", "Messaging platform")
+Container_Ext(yandexS3, "Yandex S3", "Object Storage", "External media storage for post attachments")
+System_Ext(cdn, "Media CDN", "Content Delivery Network")
+
+Rel(user, telegram, "Interacts with via messages and mini-app")
+Rel(telegram, bot, "Delivers messages via Bot API")
+Rel(telegram, frontend, "Hosts WebView")
+
+Rel(bot, envoy, "Sends gRPC requests via")
+Rel(envoy, backend, "Proxies gRPC to")
+
+Rel(bot, nats, "Publishes events to")
+Rel(backend, nats, "Consumes events from")
+Rel(nats, dlq, "Routes failed events to")
+
+Rel(backend, db, "Reads/writes content")
+
+Rel(backend, yandexS3, "Uploads/retrieves media")
+Rel(bot, yandexS3, "Uploads media")
+Rel(frontend, backend, "Sends user actions via Hotwire")
+Rel(frontend, cdn, "Loads media content via")
+Rel(cdn, yandexS3, "Fetches media from")
+
+@enduml
