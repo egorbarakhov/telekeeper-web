@@ -31,6 +31,7 @@
         "Codeium.codeium",
         "github.vscode-github-actions",
         "jebbs.plantuml",
+        "pbkit.vscode-pbkit",
         "Shopify.ruby-lsp"
       ],
       "settings": {

@@ -99,3 +99,28 @@ jobs:
           name: screenshots
           path: ${{ github.workspace }}/tmp/screenshots
           if-no-files-found: ignore
+
+  protobuf:
+    # Enforce x86_64 runner
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+
+      - name: Force Ruby platform to avoid native binaries
+        run: bundle config set force_ruby_platform true
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y protobuf-compiler
+
+      - name: Compile protobufs
+        run: bundle exec rake protobuf:compile
+
+      - name: Check protobufs are up to date
+        run: bundle exec rake protobuf:check

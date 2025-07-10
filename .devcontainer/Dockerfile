@@ -3,8 +3,10 @@ ARG RUBY_VERSION=3.4.4
 FROM ghcr.io/rails/devcontainer/images/ruby:$RUBY_VERSION
 
 USER root
-RUN apt-get update && apt-get install -y \
-    libatk1.0-0 \
+RUN dpkg --add-architecture i386 && \
+    apt-get update && \
+    apt-get install -y \
+    libc6:i386 \
     libatk-bridge2.0-0 \
     libcups2 \
     libxcomposite1 \
@@ -15,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libxss1 \
     libxtst6 \
     libgbm1 \
-    libasound2
+    libasound2 \
+    protobuf-compiler
 
 USER vscode
