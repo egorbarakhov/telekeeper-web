@@ -183,6 +183,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.8-arm64-darwin)
       racc (~> 1.4)
+    nokogiri (1.18.8-x86_64-linux-gnu)
+      racc (~> 1.4)
     ostruct (0.6.2)
     parallel (1.27.0)
     parser (3.3.8.0)
@@ -327,6 +329,7 @@ GEM
     thruster (0.1.14)
     thruster (0.1.14-aarch64-linux)
     thruster (0.1.14-arm64-darwin)
+    thruster (0.1.14-x86_64-linux)
     timeout (0.4.3)
     turbo-rails (2.0.16)
       actionpack (>= 7.1.0)
@@ -358,6 +361,7 @@ PLATFORMS
   arm-linux-gnu
   arm-linux-musl
   arm64-darwin-24
+  x86_64-linux
 
 DEPENDENCIES
   bootsnap
