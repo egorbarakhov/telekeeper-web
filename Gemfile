@@ -53,6 +53,8 @@ group :development, :test do
   gem "pry"
   gem "pry-byebug"    # Adds step-by-step debugging commands like step, next, continue
   gem "pry-rails"     # Enhances Rails console with Pry features
+
+  gem "strong_migrations"
 end
 
 group :development do
