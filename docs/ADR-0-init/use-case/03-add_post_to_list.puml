@@ -1,0 +1,44 @@
+@startuml add_post_to_list
+actor User
+participant "Telegram" as Telegram
+participant "Mini-app Frontend" as Frontend
+participant "Telegram Bot" as Bot
+participant "Envoy Proxy" as Envoy
+participant "NATS JetStream" as NATS
+participant "Web Backend" as Backend
+participant "PostgreSQL" as DB
+
+User -> Telegram : Forwards post message
+Telegram -> Bot : Delivers message
+Bot -> Envoy : gRPC SavePost(post, user_id)
+Envoy -> Backend : SavePost(post, user_id)
+Backend -> DB : INSERT post data
+DB --> Backend : OK
+Backend --> Envoy : OK
+Envoy --> Bot : OK
+
+Bot -> Envoy : gRPC GetRecentLists(user_id)
+Envoy -> Backend : GetRecentLists(user_id)
+Backend -> DB : SELECT lists WHERE user_id = ...
+DB --> Backend : recent_lists[]
+Backend --> Envoy : recent_lists[]
+Envoy --> Bot : recent_lists[]
+
+Bot -> Telegram : Sends message with recent lists + "Other lists" button
+
+alt User selects a recent list
+    User -> Telegram : Clicks list button
+    Telegram -> Bot : Delivers callback
+    Bot -> NATS : Publish event "list_selected" (post_id, list_id, user_id)
+    NATS -> Backend : Consume "list_selected"
+    Backend -> DB : INSERT list relation
+
+else User clicks "Other lists"
+    User -> Telegram : Clicks "Other lists" button
+    Telegram -> Frontend : Opens mini-app WebView
+    User -> Frontend : Selects lists in UI
+    Frontend -> Backend : POST /posts/:id/lists
+    Backend -> DB : INSERT list relations
+    Backend --> Frontend : 200 OK
+end
+@enduml

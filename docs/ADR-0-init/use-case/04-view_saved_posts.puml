@@ -1,0 +1,30 @@
+@startuml view_saved_posts
+actor User
+participant "Telegram" as Telegram
+participant "Mini-app Frontend" as Frontend
+participant "Web Backend" as Backend
+participant "PostgreSQL" as DB
+participant "Media CDN" as CDN
+participant "S3" as S3
+
+User -> Telegram : Opens mini-app
+Telegram -> Frontend : Loads WebView
+
+== Initial content ==
+Frontend -> Backend : GET /posts
+Backend -> DB : SELECT posts WHERE user_id = ...
+DB --> Backend : List<Post>
+Backend --> Frontend : Render posts, tags, lists
+
+== Filter ==
+User -> Frontend : Filters by tag/list
+Frontend -> Backend : GET /posts?tag=x&list=y
+Backend -> DB : SELECT posts WHERE ...
+DB --> Backend : Filtered posts
+Backend --> Frontend : Render updated list
+
+== Media Loading ==
+Frontend -> CDN : Load image/video
+CDN -> S3 : Fetch object
+
+@enduml
