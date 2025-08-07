@@ -31,7 +31,9 @@
         "Codeium.codeium",
         "github.vscode-github-actions",
         "jebbs.plantuml",
-        "Shopify.ruby-lsp"
+        "Shopify.ruby-lsp",
+        "ZencoderAI.zencoder",
+        "openai.chatgpt"
       ],
       "settings": {
         "[ruby]": {
