@@ -27,7 +27,7 @@ services:
     restart: unless-stopped
 
   postgres:
-    image: postgres:18beta1
+    image: postgres:18beta2-alpine
     restart: unless-stopped
     networks:
     - default
