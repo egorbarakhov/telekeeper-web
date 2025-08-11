@@ -20,7 +20,6 @@ services:
     depends_on:
     - selenium
     - postgres
-    - plantuml-server
 
   # Uncomment to use capybara tests with Selenium
   selenium:
@@ -40,9 +39,20 @@ services:
 
   plantuml-server:
     image: plantuml/plantuml-server:jetty
+    container_name: plantuml-server
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8081:8080"
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+        - "11434:11434"
+    volumes:
+        - ollama-data:/root/.ollama
 
 volumes:
+  ollama-data:
   postgres-data:

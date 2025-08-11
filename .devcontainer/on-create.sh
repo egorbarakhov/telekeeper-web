@@ -2,5 +2,5 @@
 set -e
 
 # Run setup
-gem update --system
-gem install ruby-lsp
+gem update --system --no-document
+gem install ruby-lsp --no-document
