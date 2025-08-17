@@ -49,3 +49,6 @@
 # Ignore Docker-related files
 /.dockerignore
 /Dockerfile*
+
+/.zencoder/rules/*
+!/.zencoder/rules/.keep
