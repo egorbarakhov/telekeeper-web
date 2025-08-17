@@ -1,15 +1,13 @@
-    // For format details, see https://containers.dev/implementors/json_reference/.
-    // For config options, see the README at: https://github.com/devcontainers/templates/tree/main/src/ruby
+// For format details, see https://containers.dev/implementors/json_reference/.
+// For config options, see the README at: https://github.com/devcontainers/templates/tree/main/src/ruby
 {
     "name": "telekeeper_web",
     "dockerComposeFile": "compose.yml",
     "service": "rails-app",
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-
     "mounts": [
         "source=${localEnv:HOME}/.gnupg,target=/vscode/.gnupg,type=bind,consistency=cached"
     ],
-
     // Features to add to the dev container. More info: https://containers.dev/features.
     "features": {
         "ghcr.io/rails/devcontainer/features/activestorage": {},
@@ -17,17 +15,18 @@
         "ghcr.io/rails/devcontainer/features/postgres-client": {},
         "ghcr.io/rails/devcontainer/features/bundler-cache:1.0.1": {}
     },
-
     "containerEnv": {
         "CAPYBARA_SERVER_PORT": "45678",
         "SELENIUM_HOST": "selenium",
         "KAMAL_REGISTRY_PASSWORD": "$KAMAL_REGISTRY_PASSWORD",
         "DB_HOST": "postgres"
     },
-
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    "forwardPorts": [3000, 5432, 11435],
-
+    "forwardPorts": [
+        3000,
+        5432,
+        11435
+    ],
     // Configure tool-specific properties.
     "customizations": {
         "vscode": {
@@ -41,24 +40,21 @@
             "settings": {
                 "[ruby]": {
                     "editor.defaultFormatter": "Shopify.ruby-lsp",
-                    "editor.formatOnSave": true,
                     "editor.tabSize": 2,
                     "editor.insertSpaces": true,
-                    "editor.semanticHighlighting.enabled": true,
-                    "editor.formatOnType": true
+                    "editor.semanticHighlighting.enabled": true
                 },
+                "editor.formatOnSave": true,
+                "editor.formatOnType": true,
                 "files.trimTrailingWhitespace": true,
                 "files.insertFinalNewline": true,
                 "files.autoSave": "afterDelay"
             }
         }
     },
-
     // Uncomment to connect as root instead. More info: https://containers.dev/implementors/json_reference/#remoteUser.
     // "remoteUser": "root",
-
     "onCreateCommand": ".devcontainer/on-create.sh",
-
     // Use 'postCreateCommand' to run commands after the container is created.
     "postCreateCommand": ".devcontainer/post-create.sh"
 }

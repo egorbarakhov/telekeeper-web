@@ -52,3 +52,5 @@
 
 /.zencoder/rules/*
 !/.zencoder/rules/.keep
+
+.devcontainer/
